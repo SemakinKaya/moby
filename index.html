@@ -414,17 +414,18 @@
         padding: 12px 0 10px;
       }
 
-      .refresh-circle 
-	  {
-         width: 26px;
-         height: 26px;
-         border-radius: 50%;
-         border: 2px solid rgba(120,120,140,.22);
-         border-top-color: #6d28ff;
-         cursor: pointer;
-         transition: transform .4s ease;
+      .refresh-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(120,120,140,.22);
+  border-top-color: #6d28ff;
+
+  cursor: pointer;
+
+  opacity: .5;
+  transition: all .2s ease;
 }
-      }
 
       @keyframes spinRefresh {
         from {
@@ -609,6 +610,48 @@
     location.reload();
   }, 700);
 }
+let startY = 0;
+let currentY = 0;
+let pulling = false;
+
+const contentSheet = document.querySelector(".content-sheet");
+const refreshZone = document.querySelector(".refresh-zone");
+const refreshCircle = document.querySelector(".refresh-circle");
+
+contentSheet.addEventListener("touchstart", (e) => {
+  startY = e.touches[0].clientY;
+});
+
+contentSheet.addEventListener("touchmove", (e) => {
+  currentY = e.touches[0].clientY;
+
+  const diff = currentY - startY;
+
+  if (diff > 0 && diff < 140) {
+    pulling = true;
+
+    contentSheet.style.transition = "none";
+    contentSheet.style.transform = `translateY(${diff * 0.45}px)`;
+
+    refreshCircle.style.transform = `rotate(${diff * 3}deg)`;
+    refreshCircle.style.opacity = Math.min(diff / 80, 1);
+  }
+});
+
+contentSheet.addEventListener("touchend", () => {
+  if (!pulling) return;
+
+  contentSheet.style.transition = "transform .35s ease";
+  contentSheet.style.transform = "translateY(0px)";
+
+  refreshCircle.style.animation = "spinRefresh .8s linear";
+
+  setTimeout(() => {
+    location.reload();
+  }, 700);
+
+  pulling = false;
+});	  
   </script>
 </body>
 </html>
