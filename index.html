@@ -421,8 +421,9 @@
          border-radius: 50%;
          border: 2px solid rgba(120,120,140,.22);
          border-top-color: #6d28ff;
-         animation: spinRefresh 1s linear infinite;
          cursor: pointer;
+         transition: transform .4s ease;
+}
       }
 
       @keyframes spinRefresh {
@@ -486,7 +487,7 @@
           <div class="close">×</div>
         </div>
 
-        <div class="refresh-zone" onclick="location.reload()">
+        <div class="refresh-zone" onclick="refreshApp(this)">
   <div class="refresh-circle"></div>
 </div>
 
@@ -599,6 +600,15 @@
         </div>
       `;
     }).join("");
+	function refreshApp(el) {
+  const circle = el.querySelector(".refresh-circle");
+
+  circle.style.animation = "spinRefresh 0.8s linear";
+
+  setTimeout(() => {
+    location.reload();
+  }, 700);
+}
   </script>
 </body>
 </html>
