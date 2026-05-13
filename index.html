@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bank App">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1400ff">
+  <link rel="apple-touch-icon" href="app-icon.png">
+  <title>Mobile Bank Demo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #ffffff;
+    }
+
+    .phone-frame {
+      width: 390px;
+      max-width: 100%;
+      height: 820px;
+      background: #050816;
+      border-radius: 42px;
+      padding: 12px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      border-radius: 34px;
+      overflow: hidden;
+      background: #f7eefb;
+      position: relative;
+    }
+
+    .top-screen {
+      height: 455px;
+      background:
+        radial-gradient(circle at 85% 18%, rgba(255, 43, 207, .85), transparent 32%),
+        radial-gradient(circle at 10% 20%, rgba(28, 39, 255, .95), transparent 42%),
+        linear-gradient(135deg, #1400ff 0%, #6c00ff 48%, #b600ff 100%);
+      padding: 18px 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-screen:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: 52px;
+      width: 260px;
+      height: 260px;
+      background: rgba(255,255,255,.11);
+      border-radius: 50%;
+      transform: rotate(-20deg);
+    }
+
+    .statusbar {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .nav-row {
+      display: grid;
+      grid-template-columns: 34px 1fr 34px 34px;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .search {
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      display: flex;
+      align-items: center;
+      padding: 0 13px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      backdrop-filter: blur(8px);
+    }
+
+    .round-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .balance-block {
+      text-align: center;
+      margin-top: 70px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .account-label {
+      font-size: 16px;
+      opacity: .9;
+      margin-bottom: 9px;
+    }
+
+    .balance {
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .currency-small {
+      font-size: 23px;
+      margin-left: 4px;
+    }
+
+    .accounts-pill {
+      margin: 18px auto 0;
+      width: fit-content;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 70px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dot {
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,.55);
+      border-radius: 50%;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .action {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,.92);
+    }
+
+    .action-icon {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .content-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 365px;
+      background: #faeff8;
+      border-radius: 24px 24px 0 0;
+      padding: 14px 18px 80px;
+      color: #1f2937;
+    }
+
+    .promo {
+      height: 86px;
+      background: rgba(255,255,255,.82);
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: 1fr 92px 16px;
+      gap: 8px;
+      align-items: center;
+      padding: 13px 12px;
+      box-shadow: 0 8px 24px rgba(60, 20, 90, .08);
+    }
+
+    .promo-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .promo-text {
+      font-size: 11px;
+      line-height: 1.3;
+      color: #6b7280;
+    }
+
+    .gift {
+      width: 82px;
+      height: 64px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 20%, #e7ff57, transparent 25%),
+        linear-gradient(135deg, #7d5cff, #ff77d9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gift:before {
+      content: "€";
+      position: absolute;
+      left: 28px;
+      top: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #7d3cff;
+    }
+
+    .close {
+      color: #9ca3af;
+      font-size: 18px;
+      align-self: start;
+    }
+
+    .mini-dots {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin: 8px 0 6px;
+    }
+
+    .mini-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #c7b8d4;
+    }
+
+    .transactions {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .tx {
+      min-height: 58px;
+      background: rgba(255,255,255,.7);
+      border-radius: 16px;
+      padding: 11px 13px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tx-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ece7f4;
+    }
+
+    .tx-name {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .tx-date {
+      font-size: 12px;
+      color: #8a8493;
+    }
+
+    .tx-amount {
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .plus {
+      color: #047857;
+    }
+
+    .minus {
+      color: #111827;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 72px;
+      background: rgba(255,255,255,.88);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      border-top: 1px solid rgba(0,0,0,.05);
+      color: #6b7280;
+      font-size: 11px;
+    }
+
+    .nav-item {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .demo-note {
+      position: absolute;
+      left: 22px;
+      bottom: 76px;
+      font-size: 9px;
+      color: rgba(31,41,55,.45);
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 0;
+        background: #faeff8;
+      }
+
+      .phone-frame {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .app {
+        border-radius: 0;
+      }
+
+      .top-screen {
+        height: 58vh;
+      }
+
+      .content-sheet {
+        height: 43vh;
+      }
+      .refresh-zone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0 10px;
+      }
+
+      .refresh-circle 
+	  {
+         width: 26px;
+         height: 26px;
+         border-radius: 50%;
+         border: 2px solid rgba(120,120,140,.22);
+         border-top-color: #6d28ff;
+         animation: spinRefresh 1s linear infinite;
+         cursor: pointer;
+      }
+
+      @keyframes spinRefresh {
+        from {
+          transform: rotate(0deg);
+        }
+
+           to {
+        transform: rotate(360deg);
+  }
+
+ }
+}
+  </style>
+</head>
+
+<body>
+  <div class="phone-frame">
+    <div class="app">
+      <div class="top-screen">
+        <div class="statusbar">
+          <div>9:41</div>
+          <div class="status-icons">▮▮ Wi‑Fi ▰</div>
+        </div>
+
+        <div class="nav-row">
+          <div class="avatar" id="userAvatar">SS</div>
+          <div class="search">⌕ Search</div>
+          <div class="round-btn" onclick="location.reload()">↻</div>
+          <div class="round-btn">▤</div>
+        </div>
+
+        <div class="balance-block">
+          <div class="account-label">Main · EUR</div>
+          <div class="balance" id="balance">13.821<span class="currency-small">,39 €</span></div>
+          <div class="accounts-pill">Accounts</div>
+        </div>
+
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+
+        <div class="actions">
+          <div class="action"><div class="action-icon">＋</div>Add money</div>
+          <div class="action"><div class="action-icon">03</div>Exchange</div>
+          <div class="action"><div class="action-icon">≡</div>Details</div>
+          <div class="action"><div class="action-icon">…</div>More</div>
+        </div>
+      </div>
+
+      <div class="content-sheet">
+        <div class="promo">
+          <div>
+            <div class="promo-title">Invite friends, earn €12,500</div>
+            <div class="promo-text">Earn EUR 12,500 for each friend you invite by 30 July. T&Cs apply</div>
+          </div>
+          <div class="gift"></div>
+          <div class="close">×</div>
+        </div>
+
+        <div class="refresh-zone" onclick="location.reload()">
+  <div class="refresh-circle"></div>
+</div>
+
+        <div class="transactions" id="transactions"></div>
+        
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">R</div>Home</div>
+        <div class="nav-item"><div class="nav-icon">▥</div>Stats</div>
+        <div class="nav-item"><div class="nav-icon">↔</div>Payments</div>
+        <div class="nav-item"><div class="nav-icon">▦</div>Hub</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const startBalance = 600;
+
+    const transactionCycle = [
+      {
+        type: "minus",
+        name: "Caffè Florian",
+        description: "Today, 14:02",
+        amount: 1.20,
+        avatar: "coffee-avatar.png"
+      },
+      {
+        type: "minus",
+        name: "FreeNow",
+        description: "Today, 15:44",
+        amount: 34.00,
+        avatar: "freenow-avatar.png"
+      },
+      {
+        type: "minus",
+        name: "Lorenzo Bianchi",
+        description: "Today, 16:20",
+        amount: 450.00,
+        avatar: "transfer-avatar.png"
+      },
+      {
+        type: "plus",
+        name: "Tower Rush",
+        description: "Today, 9:41",
+        amount: 13000.00,
+        avatar: "towerrush-avatar.png"
+      }
+    ]
+
+    function moneyEU(value) {
+      const sign = value < 0 ? "-" : "";
+      const abs = Math.abs(value);
+      return sign + abs.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + " €";
+    }
+
+    function getStoredNumber(key, fallback) {
+      const value = Number(localStorage.getItem(key));
+      return Number.isFinite(value) ? value : fallback;
+    }
+
+    let balance = getStoredNumber("mobileDemoBalance", startBalance);
+    let refreshCount = getStoredNumber("mobileRefreshCount", 0);
+    let transactions = JSON.parse(localStorage.getItem("mobileTransactions") || "[]");
+    const isFirstOpen = localStorage.getItem("mobileDemoStarted") !== "yes";
+
+    if (isFirstOpen) {
+      balance = startBalance;
+      refreshCount = 0;
+      transactions = [];
+      localStorage.setItem("mobileDemoStarted", "yes");
+    } else {
+      refreshCount += 1;
+
+      if (refreshCount > transactionCycle.length) {
+        balance = startBalance;
+        refreshCount = 0;
+        transactions = [];
+      } else {
+        const tx = transactionCycle[refreshCount - 1];
+
+        if (tx.type === "plus") balance += tx.amount;
+        if (tx.type === "minus") balance -= tx.amount;
+
+        transactions.unshift(tx);
+      }
+    }
+
+    localStorage.setItem("mobileDemoBalance", balance);
+    localStorage.setItem("mobileRefreshCount", refreshCount);
+    localStorage.setItem("mobileTransactions", JSON.stringify(transactions));
+
+    document.getElementById("balance").innerHTML = moneyEU(balance).replace(" €", "<span class='currency-small'> €</span>");
+
+    document.getElementById("transactions").innerHTML = transactions.map(tx => {
+      const sign = tx.type === "plus" ? "+" : "-";
+      const cls = tx.type === "plus" ? "plus" : "minus";
+
+      return `
+        <div class="tx">
+          <img class="tx-avatar" src="${tx.avatar}" onerror="this.style.display='none'">
+          <div>
+            <div class="tx-name">${tx.name}</div>
+            <div class="tx-date">${tx.description}</div>
+          </div>
+          <div class="tx-amount ${cls}">${sign}${moneyEU(tx.amount)}</div>
+        </div>
+      `;
+    }).join("");
+  </script>
+</body>
+</html>
